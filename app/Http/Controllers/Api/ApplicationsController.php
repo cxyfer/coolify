@@ -1382,7 +1382,7 @@ class ApplicationsController extends Controller
 
         $validator = customApiValidator($request->all(), [
             'name' => 'string|max:255',
-            'description' => 'string|nullable',
+            'description' => ValidationPatterns::descriptionRules(),
             'project_uuid' => 'string|required',
             'environment_name' => 'string|nullable',
             'environment_uuid' => 'string|nullable',
@@ -1396,7 +1396,7 @@ class ApplicationsController extends Controller
             'autogenerate_domain' => 'boolean',
             'tags' => 'array|nullable',
             'tags.*' => 'string|min:2',
-        ]);
+        ], ValidationPatterns::descriptionMessages());
 
         $extraFields = array_diff(array_keys($request->all()), $allowedFields);
         if ($validator->fails() || ! empty($extraFields)) {
@@ -3452,7 +3452,7 @@ class ApplicationsController extends Controller
             'name' => 'string|max:255',
             'github_app_uuid' => 'string',
             'dockerfile' => 'string',
-            'description' => 'string|nullable',
+            'description' => ValidationPatterns::descriptionRules(),
             'watch_paths' => 'string|nullable',
             'docker_compose_domains' => 'array|nullable',
             'docker_compose_domains.*' => 'array:name,domain,redirect',
@@ -3472,6 +3472,7 @@ class ApplicationsController extends Controller
         $validationRules = array_merge(sharedDataApplications($application), $validationRules);
         $validationMessages = [
             'docker_compose_domains.*.array' => 'An item in the docker_compose_domains array has invalid fields. Only name, domain, and redirect fields are supported.',
+            ...ValidationPatterns::descriptionMessages(),
         ];
         $validator = Validator::make($request->all(), $validationRules, $validationMessages);
 

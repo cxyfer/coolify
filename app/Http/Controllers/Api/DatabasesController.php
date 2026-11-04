@@ -660,7 +660,7 @@ class DatabasesController extends Controller
         }
         $validator = customApiValidator($request->all(), [
             'name' => 'string|max:255',
-            'description' => 'string|nullable',
+            'description' => ValidationPatterns::descriptionRules(),
             'image' => 'string',
             'is_public' => 'boolean',
             'public_port' => 'numeric|nullable|between:1024,65535',
@@ -676,7 +676,7 @@ class DatabasesController extends Controller
             'redact_all_env_values_in_logs' => 'boolean',
             'include_coolify_default_variables' => 'boolean',
             'is_log_drain_enabled' => 'boolean',
-        ]);
+        ], ValidationPatterns::descriptionMessages());
 
         if ($validator->fails()) {
             return response()->json([
@@ -2238,7 +2238,7 @@ class DatabasesController extends Controller
         $this->normalizeNumericLimits($request);
         $validator = customApiValidator($request->all(), [
             'name' => 'string|max:255',
-            'description' => 'string|nullable',
+            'description' => ValidationPatterns::descriptionRules(),
             'image' => 'string',
             'project_uuid' => 'string|required',
             'environment_name' => 'string|nullable',
@@ -2258,7 +2258,7 @@ class DatabasesController extends Controller
             'instant_deploy' => 'boolean',
             'tags' => 'array|nullable',
             'tags.*' => 'string|min:2',
-        ]);
+        ], ValidationPatterns::descriptionMessages());
         if ($validator->fails()) {
             return response()->json([
                 'message' => 'Validation failed.',

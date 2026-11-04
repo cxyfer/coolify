@@ -417,7 +417,7 @@ class ServicesController extends Controller
             'server_uuid' => 'string|required',
             'destination_uuid' => 'string|nullable',
             'name' => 'string|max:255',
-            'description' => 'string|nullable',
+            'description' => ValidationPatterns::descriptionRules(),
             'instant_deploy' => 'boolean',
             'connect_to_docker_network' => 'boolean',
             'urls' => 'array|nullable',
@@ -432,6 +432,7 @@ class ServicesController extends Controller
         ];
         $validationMessages = [
             'urls.*.array' => 'An item in the urls array has invalid fields. Only name and url fields are supported.',
+            ...ValidationPatterns::descriptionMessages(),
         ];
         $validator = Validator::make($request->all(), $validationRules, $validationMessages);
 
@@ -642,7 +643,7 @@ class ServicesController extends Controller
                 'server_uuid' => 'string|required',
                 'destination_uuid' => 'string',
                 'name' => 'string|max:255',
-                'description' => 'string|nullable',
+                'description' => ValidationPatterns::descriptionRules(),
                 'instant_deploy' => 'boolean',
                 'connect_to_docker_network' => 'boolean',
                 'docker_compose_raw' => 'string|required',
@@ -658,6 +659,7 @@ class ServicesController extends Controller
             ];
             $validationMessages = [
                 'urls.*.array' => 'An item in the urls array has invalid fields. Only name and url fields are supported.',
+                ...ValidationPatterns::descriptionMessages(),
             ];
             $validator = Validator::make($request->all(), $validationRules, $validationMessages);
 
@@ -1246,7 +1248,7 @@ class ServicesController extends Controller
 
         $validationRules = [
             'name' => 'string|max:255',
-            'description' => 'string|nullable',
+            'description' => ValidationPatterns::descriptionRules(),
             'instant_deploy' => 'boolean',
             'connect_to_docker_network' => 'boolean',
             'docker_compose_raw' => 'string|nullable',
@@ -1261,6 +1263,7 @@ class ServicesController extends Controller
         ];
         $validationMessages = [
             'urls.*.array' => 'An item in the urls array has invalid fields. Only name and url fields are supported.',
+            ...ValidationPatterns::descriptionMessages(),
         ];
         $validator = Validator::make($request->all(), $validationRules, $validationMessages);
 

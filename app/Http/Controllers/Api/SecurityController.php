@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\PrivateKey;
+use App\Support\ValidationPatterns;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
@@ -188,9 +189,9 @@ class SecurityController extends Controller
         }
         $validator = customApiValidator($request->all(), [
             'name' => 'string|max:255',
-            'description' => 'string|max:255',
+            'description' => ValidationPatterns::descriptionRules(),
             'private_key' => 'required|string',
-        ]);
+        ], ValidationPatterns::descriptionMessages());
 
         if ($validator->fails()) {
             $errors = $validator->errors();
@@ -326,9 +327,9 @@ class SecurityController extends Controller
 
         $validator = customApiValidator($request->all(), [
             'name' => 'string|max:255',
-            'description' => 'string|max:255',
+            'description' => ValidationPatterns::descriptionRules(),
             'private_key' => 'string',
-        ]);
+        ], ValidationPatterns::descriptionMessages());
 
         $extraFields = array_diff(array_keys($request->all()), $allowedFields);
         if ($validator->fails() || ! empty($extraFields)) {

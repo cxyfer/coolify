@@ -307,6 +307,20 @@ test('manage_application updates, clones and moves an application of the token t
         ->and($this->application->fresh()->environment_id)->toBe($target->id);
 });
 
+test('manage_application rejects a description the UI does not allow and keeps the old one', function () {
+    $this->application->update(['description' => 'Original description']);
+
+    $response = mcpAppCall(mcpAppToken($this->user), 'manage_application', [
+        'action' => 'update',
+        'uuid' => $this->application->uuid,
+        'data' => ['description' => 'API [v2]: production'],
+    ]);
+
+    expect(mcpAppIsError($response))->toBeTrue()
+        ->and(mcpAppText($response))->toContain('The description may only contain letters')
+        ->and($this->application->fresh()->description)->toBe('Original description');
+});
+
 test('manage_application deletes an application only with confirm=true and a delete token', function () {
     $writeOnly = mcpAppCall(mcpAppToken($this->user, ['write']), 'manage_application', ['action' => 'delete', 'uuid' => $this->application->uuid, 'confirm' => true]);
     expect(mcpAppIsError($writeOnly))->toBeTrue()
